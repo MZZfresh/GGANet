@@ -1,0 +1,7 @@
+# GGANet: A model for the prediction of miRNA-drug resistance based on contrastive learning and global attention
+ MicroRNAs (miRNAs) play crucial roles in organisms, and recent studies confirm their link to various diseases. The regulatory mechanisms and influence of miRNAs are current research hotspots. Biological experiments require significant time and resources, so we propose a novel model based on the global attention network graph (GGANet), considering multiple features of miRNAs and drugs. It uses clustering contrast learning to enhance information aggregation.(1) We fused multiple features for miRNAs and drugs during initialization to better represent node information. (2) Clustering comparison learning helps nodes learn differences and similarities in hidden features. (3) A global transformer module was used, which can pay attention to local node information while also utilizing the global graph attention mechanism. The model achieved an AUC of 0.9779, AUPR of 0.9771, and F1-score of 0.9615, demonstrating excellent link prediction performance and robustness.
+
+
+### poc_enc: the location encoding file 
+### ClusteringComparativeLearning.py is clustering comparative learning
+### Run : main.py
