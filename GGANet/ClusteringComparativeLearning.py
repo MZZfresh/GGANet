@@ -10,23 +10,23 @@ import torch.nn.functional as F
 import pandas as pd
 import numpy as np
 drug_miRNA = pd.read_csv(r"dataset\edges\edges.csv", header=None)  
-# 加载节点特征  
+ 
 miRNA = pd.read_csv(r"dataset\miran\mirna_result_out.csv", header=None)  
 drug = pd.read_csv(r"dataset\drug\drug_result_out.csv", header=None)  
-# 合并特征  
+ 
 features = torch.Tensor( drug.values.tolist()+miRNA.values.tolist())  
-# 获取唯一的节点列表  
+ 
 miRNA_list = list(set(drug_miRNA[1]))  
 drug_list = list(set(drug_miRNA[0]))  
-# 创建邻接矩阵  
+ 
 adj = torch.LongTensor(  
     [[drug_list.index(x[0]), miRNA_list.index(x[1]) ] for x in drug_miRNA.values]  
 ).T  
-# 创建节点类型张量  
+
 num_drug_nodes = len(drug_list)  
 num_miRNA_nodes = len(miRNA_list)  
 node_types = torch.cat([torch.zeros(num_drug_nodes, dtype=torch.long), torch.ones(num_miRNA_nodes, dtype=torch.long)])  
-# 创建Data对象  
+
 
 
 
@@ -68,12 +68,12 @@ def merge_to_edge_index(positive_pairs, negative_pairs):
 
     pos_edge_index = [[], []]
     neg_edge_index = [[], []]
-    # 将正样本对转换为边索引格式
+
     for pair in positive_pairs:
         pos_edge_index[0].append(pair[0])  # 起始节点
         pos_edge_index[1].append(pair[1])  # 结束节点
 
-    # 将负样本对转换为边索引格式
+
     for pair in negative_pairs:
         neg_edge_index[0].append(pair[0])  # 起始节点
         neg_edge_index[1].append(pair[1])  # 结束节点
@@ -84,9 +84,9 @@ def merge_to_edge_index(positive_pairs, negative_pairs):
 
     return pos_edge_index,neg_edge_index
 centroids, node2cluster = run_kmeans(features,10)
-# 查找正样本对
+
 positive_pairs = find_positive_pairs(node2cluster)
-# 查找负样本对
+
 negative_pairs = find_negative_pairs(node2cluster)
 pos_edge_index,neg_edge_index = merge_to_edge_index(positive_pairs, negative_pairs)
 
@@ -105,7 +105,7 @@ num_epochs = 100
 
 
 
-# 2. 构建模型
+
 class ContrastiveGCN(nn.Module):
     def __init__(self):
         super(ContrastiveGCN, self).__init__()
@@ -122,10 +122,10 @@ class ContrastiveGCN(nn.Module):
         x = self.fc2(x)
         return x
 
-# 3. 定义InfoNCE损失函数实例
+
 nce_loss = InfoNCE()
 
-# 4. 训练模型
+
 model = ContrastiveGCN()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -149,10 +149,10 @@ train(model, optimizer, graph_data, num_epochs)
 with torch.no_grad():
     output = model(data.x, data.edge_index)
 
-# 将张量转换为numpy数组
+
 output_np = output.numpy()
 
-# 保存numpy数组为CSV文件
+
 np.savetxt("output.csv", output_np, delimiter=",")
 
 
