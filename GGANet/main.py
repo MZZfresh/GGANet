@@ -98,9 +98,10 @@ for i in tqdm(range(args.times), desc="Total Progress",leave=False):
     print(f"Epoch {epoch+1}/{args.epoch}, Loss: {loss.item()}")
 
     model.eval()
+    data2 = data['train]
     test_data = data['test']
     data_in = test_data
-    z = model(data_in,data_in.node_index)
+    z = model(data2,data2.node_index)
     a,b = model.test(z,data_in)
     result ,y, pred = model.test_resul(z, data_in.pos_edge_label_index, data_in.neg_edge_label_index)
 
